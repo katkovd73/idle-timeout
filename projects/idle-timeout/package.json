@@ -1,6 +1,16 @@
 {
   "name": "idle-timeout",
-  "version": "0.0.1",
+  "version": "17.2.0",
+  "description": "idle-timeout for Angular projects",
+  "keywords": [
+    "timeout",
+    "idle",
+    "Angular"
+  ],
+  "author": {
+    "name": "Dmitry Katkov",
+    "email": "dkprogramming.developer@gmail.com"
+  },
   "peerDependencies": {
     "@angular/common": "^17.2.0",
     "@angular/core": "^17.2.0"
