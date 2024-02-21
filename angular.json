@@ -3,5 +3,38 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "idle-timeout": {
+      "projectType": "library",
+      "root": "projects/idle-timeout",
+      "sourceRoot": "projects/idle-timeout/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/idle-timeout/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/idle-timeout/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/idle-timeout/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/idle-timeout/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    }
   }
 }

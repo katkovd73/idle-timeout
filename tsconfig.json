@@ -6,6 +6,11 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
+    "paths": {
+      "idle-timeout": [
+        "./dist/idle-timeout"
+      ]
+    },
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
