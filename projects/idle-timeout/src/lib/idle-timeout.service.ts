@@ -25,6 +25,7 @@ export class IdleTimeoutService {
   private timer: any;
   private timeOutMilliSeconds: number = 0;
   private timeOutWarningMilliSeconds: number = 0;
+  private timeIntervalCheckIdleStatus: number = 0;
 
   private dialogRef!: MatDialogRef<any, any>;
   private dialogWidth: string | undefined;
@@ -44,15 +45,17 @@ export class IdleTimeoutService {
     this.dialogLeftPosition = settings.dialogLeftPosition + 'px';
     this.timeOutMilliSeconds = settings.timeIntervalExpiredTime;
     this.timeOutWarningMilliSeconds = settings.timeIntervalExpiringTime;
+    this.timeIntervalCheckIdleStatus = settings.timeIntervalCheckIdleStatus;
 
     document.addEventListener('click', this.resetIdle.bind(this));
     document.addEventListener('keypress', this.resetIdle.bind(this));
     this.resetIdle();
-    this.startTimer(settings.timeIntervalCheckIdleStatus);
+    this.startTimer(this.timeIntervalCheckIdleStatus);
   }
 
   startWatchingAgain() {
     this.loggedInSignal.set(true);
+    this.startTimer(this.timeIntervalCheckIdleStatus);
   }
 
   private resetIdle(): void {
@@ -72,6 +75,10 @@ export class IdleTimeoutService {
 
   private startTimer(timeInterval: number): void {
     this.timer = setInterval(() => this.verifyIdleStatus(), timeInterval);
+  }
+
+  private stopTimer() {
+    clearInterval(this.timer);
   }
 
   private openDialog() {
@@ -104,6 +111,7 @@ export class IdleTimeoutService {
           if (idleTimeoutModel.expiring === true) {
             idleTimeoutModel.expiring = false;
             this.idleSignal.set(this.idleTimeout);
+            this.stopTimer();
           }
         }
       } else {
