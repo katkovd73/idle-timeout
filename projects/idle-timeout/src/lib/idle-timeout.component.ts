@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [MatDialogModule, MatButtonModule, MatDialogActions, MatDialogContent, MatDialogClose],
   template: `
-   <div id="expireDialog">
    <h2 mat-dialog-title>Extend Session?</h2>
    <mat-dialog-content>
       <p>Due to inactivity, your login session will expire shortly. Do you want to continue?</p>
@@ -15,15 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
    <mat-dialog-actions align="end">
       <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Click to stay logged in</button>
    </mat-dialog-actions>
-   </div>
   `,
-  styles: `
-  #expireDialog {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  `
+  styles: ``
 })
 export class IdleTimeoutComponent {
 
