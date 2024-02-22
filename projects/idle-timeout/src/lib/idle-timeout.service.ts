@@ -1,4 +1,4 @@
-import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 import { IdleTimeoutComponent } from './idle-timeout.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
@@ -6,6 +6,8 @@ export interface IIdleSettings {
   timeIntervalExpiredTime: number;
   timeIntervalExpiringTime: number;
   timeIntervalCheckIdleStatus: number;
+  dialogWidth: number;
+  dialogHeight: number;
 }
 
 export interface IIdleTimeoutModel {
@@ -19,21 +21,27 @@ export interface IIdleTimeoutModel {
 export class IdleTimeoutService {
 
   loggedInSignal = signal(true);
-  timer: any;
+  private timer: any;
   private timeOutMilliSeconds: number = 0;
   private timeOutWarningMilliSeconds: number = 0;
 
-  dialogRef!: MatDialogRef<any, any>;
+  private dialogRef!: MatDialogRef<any, any>;
+  private dialogWidth: string | undefined;
+  private dialogHeight: string | undefined;
 
-  idleTimeout: IIdleTimeoutModel = { expired: false, expiring: false };
+  private idleTimeout: IIdleTimeoutModel = { expired: false, expiring: false };
   private idleSignal: WritableSignal<IIdleTimeoutModel> = signal(this.idleTimeout);
-  //readonly idleSignalModel: Signal<IIdleTimeoutModel> = this.idleSignal.asReadonly();
 
   constructor(public dialog: MatDialog) { }
 
   startWatching(settings: IIdleSettings): void {
+
+    //settings
+    this.dialogWidth = settings.dialogWidth + 'px';
+    this.dialogHeight = settings.dialogHeight + 'px';
     this.timeOutMilliSeconds = settings.timeIntervalExpiredTime;
     this.timeOutWarningMilliSeconds = settings.timeIntervalExpiringTime;
+
     document.addEventListener('click', this.resetIdle.bind(this));
     document.addEventListener('keypress', this.resetIdle.bind(this));
     this.resetIdle();
@@ -59,12 +67,16 @@ export class IdleTimeoutService {
     }
   }
 
-  startTimer(timeInterval: number): void {
+  private startTimer(timeInterval: number): void {
     this.timer = setInterval(() => this.verifyIdleStatus(), timeInterval);
   }
 
   private openDialog() {
-    this.dialogRef = this.dialog.open(IdleTimeoutComponent);
+    this.dialogRef = this.dialog.open(IdleTimeoutComponent,
+      {
+        height: this.dialogHeight,
+        width: this.dialogWidth
+      });
   }
 
   private verifyIdleStatus() {
