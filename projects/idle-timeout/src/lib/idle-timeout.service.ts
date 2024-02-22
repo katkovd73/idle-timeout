@@ -27,13 +27,17 @@ export class IdleTimeoutService {
 
   constructor() { }
 
-  startWatchingForActivities(settings: IIdleSettings): void {
+  startWatching(settings: IIdleSettings): void {
     this.timeOutMilliSeconds = settings.timeIntervalExpiredTime;
     this.timeOutWarningMilliSeconds = settings.timeIntervalExpiringTime;
     document.addEventListener('click', this.resetIdle.bind(this));
     document.addEventListener('keypress', this.resetIdle.bind(this));
     this.resetIdle();
     this.startTimer(settings.timeIntervalCheckIdleStatus);
+  }
+
+  startWatchingAgain() {
+    this.loggedInSignal.set(true);
   }
 
   resetIdle(): void {
