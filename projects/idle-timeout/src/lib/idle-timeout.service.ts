@@ -8,6 +8,7 @@ export interface IIdleSettings {
   timeIntervalCheckIdleStatus: number;
   dialogWidth: number;
   dialogHeight: number;
+  dialogLeftPosition: number;
 }
 
 export interface IIdleTimeoutModel {
@@ -28,6 +29,7 @@ export class IdleTimeoutService {
   private dialogRef!: MatDialogRef<any, any>;
   private dialogWidth: string | undefined;
   private dialogHeight: string | undefined;
+  private dialogLeftPosition: string | undefined;
 
   private idleTimeout: IIdleTimeoutModel = { expired: false, expiring: false };
   private idleSignal: WritableSignal<IIdleTimeoutModel> = signal(this.idleTimeout);
@@ -39,6 +41,7 @@ export class IdleTimeoutService {
     //settings
     this.dialogWidth = settings.dialogWidth + 'px';
     this.dialogHeight = settings.dialogHeight + 'px';
+    this.dialogLeftPosition = settings.dialogLeftPosition + 'px';
     this.timeOutMilliSeconds = settings.timeIntervalExpiredTime;
     this.timeOutWarningMilliSeconds = settings.timeIntervalExpiringTime;
 
@@ -75,7 +78,8 @@ export class IdleTimeoutService {
     this.dialogRef = this.dialog.open(IdleTimeoutComponent,
       {
         height: this.dialogHeight,
-        width: this.dialogWidth
+        width: this.dialogWidth,
+        position: { left: this.dialogLeftPosition }
       });
   }
 
@@ -112,7 +116,6 @@ export class IdleTimeoutService {
         if (nowDatetime.getTime() >= parseInt(checkExpiredDatetimeValue)) {
           if (idleTimeoutModel.expired === false) {
             idleTimeoutModel.expired = true;
-            console.log('Expired=true');
             this.idleSignal.set(this.idleTimeout);
 
             this.loggedInSignal.set(false);
@@ -128,9 +131,6 @@ export class IdleTimeoutService {
       } else {
         this.resetIdle();
       }
-    } else {
-      console.log('User is NOT logged in');
     }
-
   }
 }
