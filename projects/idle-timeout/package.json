@@ -1,6 +1,6 @@
 {
   "name": "idle-timeout-angular",
-  "version": "17.2.5",
+  "version": "17.2.6",
   "description": "idle-timeout for Angular projects",
   "keywords": [
     "timeout",
