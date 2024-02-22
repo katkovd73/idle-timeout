@@ -1,4 +1,6 @@
 import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
+import { IdleTimeoutComponent } from './idle-timeout.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 export interface IIdleSettings {
   timeIntervalExpiredTime: number;
@@ -21,11 +23,13 @@ export class IdleTimeoutService {
   private timeOutMilliSeconds: number = 0;
   private timeOutWarningMilliSeconds: number = 0;
 
+  dialogRef!: MatDialogRef<any, any>;
+
   idleTimeout: IIdleTimeoutModel = { expired: false, expiring: false };
   private idleSignal: WritableSignal<IIdleTimeoutModel> = signal(this.idleTimeout);
-  readonly idleSignalModel: Signal<IIdleTimeoutModel> = this.idleSignal.asReadonly();
+  //readonly idleSignalModel: Signal<IIdleTimeoutModel> = this.idleSignal.asReadonly();
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   startWatching(settings: IIdleSettings): void {
     this.timeOutMilliSeconds = settings.timeIntervalExpiredTime;
@@ -40,7 +44,7 @@ export class IdleTimeoutService {
     this.loggedInSignal.set(true);
   }
 
-  resetIdle(): void {
+  private resetIdle(): void {
 
     if (this.loggedInSignal() == true) {
 
@@ -59,7 +63,11 @@ export class IdleTimeoutService {
     this.timer = setInterval(() => this.verifyIdleStatus(), timeInterval);
   }
 
-  verifyIdleStatus() {
+  private openDialog() {
+    this.dialogRef = this.dialog.open(IdleTimeoutComponent);
+  }
+
+  private verifyIdleStatus() {
     if (this.loggedInSignal() == true) {
 
       let idleTimeoutModel = this.idleSignal();
@@ -74,8 +82,7 @@ export class IdleTimeoutService {
             this.idleSignal.set(this.idleTimeout);
 
             if (this.loggedInSignal() == true)
-              alert("Due to inactivity, your login session will expire shortly. Do you want to continue?");
-            //this.dialogService.openTimeOutDialog('Extend Session?', 'Due to inactivity, your login session will expire shortly. Do you want to continue?');
+              this.openDialog();
           }
         } else {
           if (idleTimeoutModel.expiring === true) {
@@ -98,8 +105,7 @@ export class IdleTimeoutService {
 
             this.loggedInSignal.set(false);
 
-            //this.dialogService.closeDialog('timeout-dialog');
-            alert('You are logged out - close the previous dialog');
+            this.dialogRef.close();
           }
         } else {
           if (idleTimeoutModel.expired === true) {
